@@ -25,6 +25,16 @@ they will only be folded on file open, you will be unable to fold them later.
 
 `"customfolding_onload_tags": [ ["tag1open", "tag1close"], ["tag2open", "tag2close"], ... ]`
 
-Alternatively, you can set this to True in order to fold all your defined flags. 
+Alternatively, you can set this to true in order to fold all your defined flags. 
 
-`"customfolding_onload_all": True`
+`"customfolding_onload_all": true`
+
+### Examples
+
+Before Folding:
+
+![Before Fold](http://antidiametric.com/customfolding/customfold-before.png)
+
+After Folding:
+
+![After Fold](http://antidiametric.com/customfolding/customfold-after.png)
