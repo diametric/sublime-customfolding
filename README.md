@@ -15,20 +15,12 @@ elements being rendered to expand a fold.
 
 ### Configuration
 
-<<<<<<< HEAD
-=======
-To define the tags to fold on.
-
->>>>>>> 8e1b87448624a138f2ef7b6a04738e0e9f1a790d
 `"customfolding_tags": [ ["tag1open", "tag1close"], ["tag2open", "tag2close"], ... ]`
 
 To define the tags to fold on file open.  These can be a subset, or independent
 of the defined defined customfolding_tags setting.  If these are independent 
 they will only be folded on file open, you will be unable to fold them later.
 
-<<<<<<< HEAD
-`"customfolding_onload_tags": [ ["tag1open", "tag1close"], ["tag2open", "tag2close"], ... ]`
-=======
 `"customfolding_onload_tags": [ ["tag1open", "tag1close"], ["tag2open", "tag2close"], ... ]`
 
 Alternatively, you can set this to true in order to fold all your defined flags. 
@@ -44,4 +36,3 @@ Before Folding:
 After Folding:
 
 ![After Fold](http://antidiametric.com/customfolding/customfold-after.png)
->>>>>>> 8e1b87448624a138f2ef7b6a04738e0e9f1a790d
