@@ -45,11 +45,9 @@ def find_matching_fold(view, tagopen, tagclose, pos, nest = 0):
 		else:
 			return nextclose
 
-# Finds the first open tag starting at the beginning of the view, and then
-# recursively closes every custom fold region.
-
-def fold_tag_all(view, opentag, closetag):
-	p = 0
+# Fold everything below the supplied position. 
+def fold_tag_below(view, opentag, closetag, pos):
+	p = pos
 	while True:
 		firstopen = view.find(opentag, p, sublime.LITERAL)
 
@@ -61,20 +59,24 @@ def fold_tag_all(view, opentag, closetag):
 
 		# Ignore fold markers inside of strings. 
 		if view.score_selector(firstopen.a, "string") > 0:
-			print("Skipping over string fold")
 			continue
 
 		firstclose = find_matching_fold(view, opentag, closetag, firstopen.b)
-		foldregion = sublime.Region(firstopen.b, firstclose.a)
-
-		print("Folding region %s" % foldregion)
+		foldregion = sublime.Region(view.line(firstopen).b, view.line(firstclose).b)
 
 		view.fold(foldregion)
 
 
+# Fold the current region where the cursor is.
+def fold_below(view):
+	cur = view.sel()[0].begin()
+	fold_tag_below(view, "{{{", "}}}", cur)
+
+# Folds all the configured tags (not including onload tags)
 def fold_ALL_the_things(view):
 	for tags in view.settings().get("customfolding_onload_tags", []):
-		fold_tag_all(view, tags[0], tags[1])
+		if tags[0] != "" and tags[1] != "":
+			fold_tag_(view, tags[0], tags[1], 0)
 
 # Handles folding tags on file load
 class CustomfoldingEventListener(sublime_plugin.EventListener):
@@ -84,12 +86,12 @@ class CustomfoldingEventListener(sublime_plugin.EventListener):
 
 		defaultFolds = view.settings().get("customfolding_onload_tags", [])
 
-
 		if len(view.settings().get("customfolding_onload_tags", [])) > 0:
 			fold_ALL_the_things(view)
 
 
 ### Test Area
+### ----------------------------------------------------------------------------
 
 ### VERY_LONG_AND_ANNOYING_FOLD_TAG_START
 
