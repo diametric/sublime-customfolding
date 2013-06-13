@@ -45,6 +45,10 @@ def find_matching_fold(view, tagopen, tagclose, pos, nest = 0):
 		else:
 			return nextclose
 
+def find_nearest_open(view):
+	pass
+
+
 # Fold everything below the supplied position. 
 def fold_tag_below(view, opentag, closetag, pos):
 	p = pos
@@ -70,24 +74,38 @@ def fold_tag_below(view, opentag, closetag, pos):
 # Fold the current region where the cursor is.
 def fold_below(view):
 	cur = view.sel()[0].begin()
-	fold_tag_below(view, "{{{", "}}}", cur)
+	for tags in view.settings().get("customfolding_tags"):
+		fold_tag_below(view, tags[0], tags[1], cur)
+
 
 # Folds all the configured tags (not including onload tags)
 def fold_ALL_the_things(view):
-	for tags in view.settings().get("customfolding_onload_tags", []):
+	for tags in view.settings().get("customfolding_tags", []):
 		if tags[0] != "" and tags[1] != "":
-			fold_tag_(view, tags[0], tags[1], 0)
+			fold_tag_below(view, tags[0], tags[1], 0)
+
+# Fold everything command. 
+class CustomfoldingFoldAllCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		fold_ALL_the_things(self.view)
+
+class CustomfoldingFoldBelowCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		fold_below(self.view)
 
 # Handles folding tags on file load
 class CustomfoldingEventListener(sublime_plugin.EventListener):
 	def on_load(self, view):
 		if view.settings().get("customfolding_onload_all", False):
-			fold_ALL_the_things(view)
+			for tags in view.settings().get("customfolding_onload_tags", []):
+				if tags[0] != "" and tags[1] != "":
+					fold_tag_below(view, tags[0], tags[1], 0)
 
 		defaultFolds = view.settings().get("customfolding_onload_tags", [])
 
 		if len(view.settings().get("customfolding_onload_tags", [])) > 0:
 			fold_ALL_the_things(view)
+
 
 
 ### Test Area
@@ -103,6 +121,9 @@ class CustomfoldingEventListener(sublime_plugin.EventListener):
 
 # {{{ fold 1.1.1
 	
+asdfasdfadfadfadfadsf
+
+
 # }}} endfold 1.1.1
 
 # }}} endfold 1.1
